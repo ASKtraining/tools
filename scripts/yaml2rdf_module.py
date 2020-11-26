@@ -8,7 +8,7 @@ import os
 from rdflib.namespace import DC, DCTERMS, DOAP, FOAF, SKOS, OWL, RDF, RDFS, VOID, XMLNS, XSD
 import wget
 from yaml2rdf_shared import *
-from yaml2rdf import convert
+from yaml2rdf import convert_file
 
 KEY_RESOURCE_URL_YAML = 'yaml-url'
 KEY_RESOURCE_URL_RDF = 'rdf-url'
@@ -40,8 +40,8 @@ def ensure_resource_turtles(yaml_cont, g):
                     'resource_%d.ttl' % res_i)
             res_pre_file = os.path.join(os.path.curdir,
                     'resource_%d.pref' % res_i)
-            download(res_yml_url, res_yml_file)
-            convert(res_yml_file, res_ttl_file, res_pre_file)
+            #download(res_yml_url, res_yml_file)
+            convert_file(res_yml_file, res_ttl_file, res_pre_file)
             yaml_cont[KEY_RESOURCE_FILE_RDF] = res_ttl_file
         elif KEY_RESOURCE_URL_RDF in elem:
             res_ttl_url = elem[KEY_RESOURCE_URL_RDF]
@@ -50,7 +50,7 @@ def ensure_resource_turtles(yaml_cont, g):
             download(res_ttl_url, res_ttl_file)
             yaml_cont[KEY_RESOURCE_FILE_RDF] = res_ttl_file
         else:
-            conv_fail('Resource needs either of %s or %s spezified'
+            conv_fail('Resource needs either of %s or %s specified'
                     % (KEY_RESOURCE_URL_YAML, KEY_RESOURCE_URL_RDF))
         res_i = res_i + 1
 
@@ -79,19 +79,22 @@ def convert_module_yaml_to_rdf(yaml_cont, g):
     g.add(( m_s, RDF.type, ASK.Module ))
     g.add(( m_s, RDFS.label, rdf_str(y['name']) ))
     if 'manual' in y:
-        g.add(( m_s, ASK.manual, rdf_str(y['manual']) ))
+        g.add(( m_s, ASK.manual, rdf_path(y['manual']) ))
     elif os.path.exists('manual.md'):
-        g.add(( m_s, ASK.manual, rdf_str('manual.md') ))
+        g.add(( m_s, ASK.manual, rdf_path('manual.md') ))
     else:
         conv_fail('Entry not found "%s", and default path "%s" does not exist'
                 % (pre_path + '.' + 'manual', os.path.curdir + '/manual.md'))
     g.add(( m_s, ASK.release, rdf_str(y['release']) ))
-    g.add(( m_s, ASK.duration, rdf_str(y['duration']) ))
-    g.add(( m_s, ASK.maxParticipians, rdf_str(y['max-participians']) ))
+    g.add(( m_s, SCHEMA.duration, rdf_duration(y['duration']) ))
+    g.add(( m_s, ASK.maxParticipants, rdf_int(int(y['max-participants'])) ))
     g.add(( m_s, ASK.compatibility, rdf_str(y['compatibility']) ))
-    g.add(( m_s, ASK.blogPosts, rdf_str(y['blog-posts']) ))
-    g.add(( m_s, ASK.issues, rdf_str(y['issues']) ))
-    g.add(( m_s, ASK.newIssue, rdf_str(y['new-issue']) ))
+    if 'blog' in y:
+        g.add(( m_s, ASK.blog, rdf_url(y['blog']) ))
+    if 'issues' in y:
+        g.add(( m_s, ASK.issues, rdf_url(y['issues']) ))
+    if 'new-issue' in y:
+        g.add(( m_s, ASK.newIssue, rdf_url(y['new-issue']) ))
 
     conv_authors(y, g, m_s)
     conv_licenses(y, g, m_s)

@@ -38,6 +38,7 @@ def create_graph():
     g.bind("rdf", RDF)
     g.bind("rdfs", RDFS)
     g.bind("schema", SCHEMA)
+    g.bind("spdx", SPDX)
     g.bind("foaf", FOAF)
     g.bind("xsd",  XSD)
     g.bind("ask",  ASK)
@@ -80,12 +81,7 @@ def convert_yaml_to_rdf(yaml_cont, conv_func, pref_file=None):
     return g.serialize(format="turtle").decode("utf-8")
 
 
-@click.command(context_settings=CONTEXT_SETTINGS)
-@click.argument('yaml_file', type=click.Path(), envvar='YAML_FILE', default=None)
-@click.argument('rdf_file', type=click.Path(), envvar='RDF_FILE', default=None)
-@click.argument('pref_file', type=click.Path(), envvar='PREF_FILE', default='./Prefixes.pref')
-@click.version_option("1.0")
-def convert(yaml_file=None, rdf_file=None, pref_file='./Prefixes.pref'):
+def convert_file(yaml_file=None, rdf_file=None, pref_file='./Prefixes.pref'):
     '''
     Converts an Training, Module or Resource meta-data file
     (training|module|resource.yaml)
@@ -126,6 +122,17 @@ def convert(yaml_file=None, rdf_file=None, pref_file='./Prefixes.pref'):
     out_s = open(rdf_file, 'w')
     out_s.write(rdf_cont)
     out_s.close()
+
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.argument('yaml_file', type=click.Path(), envvar='YAML_FILE', default=None)
+@click.argument('rdf_file', type=click.Path(), envvar='RDF_FILE', default=None)
+@click.argument('pref_file', type=click.Path(), envvar='PREF_FILE', default='./Prefixes.pref')
+@click.version_option("1.0")
+def convert(yaml_file=None, rdf_file=None, pref_file='./Prefixes.pref'):
+    '''
+    Main CLI interface to yaml2rdf
+    '''
+    convert_file(yaml_file, rdf_file, pref_file)
 
 if __name__ == '__main__':
     convert()

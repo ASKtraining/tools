@@ -27,19 +27,21 @@ def convert_resource_yaml_to_rdf(yaml_cont, g):
     g.add(( m_s, RDF.type, ASK.Resource ))
     g.add(( m_s, RDFS.label, rdf_str(y['name']) ))
     if 'manual' in y:
-        g.add(( m_s, ASK.manual, rdf_str(y['manual']) ))
+        g.add(( m_s, ASK.manual, rdf_path(y['manual']) ))
     elif os.path.exists('manual.md'):
-        g.add(( m_s, ASK.manual, rdf_str('manual.md') ))
+        g.add(( m_s, ASK.manual, rdf_path('manual.md') ))
     else:
         conv_fail('Entry not found "%s", and default path "%s" does not exist'
                 % (pre_path + '.' + 'manual', os.path.curdir + '/manual.md'))
     g.add(( m_s, ASK.release, rdf_str(y['release']) ))
-    g.add(( m_s, ASK.duration, rdf_str(y['duration']) ))
+    g.add(( m_s, SCHEMA.duration, rdf_duration(y['duration']) ))
     g.add(( m_s, ASK.difficulty, rdf_str(y['difficulty']) ))
-    g.add(( m_s, ASK.cost, rdf_str(y['cost']) ))
-    g.add(( m_s, ASK.language, rdf_str(y['language']) ))
-    #g.add(( m_s, ASK.issues, rdf_str(y['issues']) ))
-    #g.add(( m_s, ASK.newIssue, rdf_str(y['new-issue']) ))
+    g.add(( m_s, ASK.cost, rdf_monetary_amount(y['cost']) ))
+    g.add(( m_s, SCHEMA.inLanguage, rdf_str(y['language']) ))
+    if 'issues' in y:
+        g.add(( m_s, ASK.issues, rdf_url(y['issues']) ))
+    if 'new-issue' in y:
+        g.add(( m_s, ASK.newIssue, rdf_url(y['new-issue']) ))
 
     for cp in y['connected-platforms']:
         for key, val in cp.items():
@@ -52,7 +54,7 @@ def convert_resource_yaml_to_rdf(yaml_cont, g):
         t_s  = ASKC[str2id(t['name'])]
         g.add(( t_s, RDF.type, ASK.Material ))
         g.add(( t_s, RDFS.label, rdf_str(t['name']) ))
-        g.add(( t_s, SCHEMA.stockroom, rdf_str(t['stockroom']) ))
+        g.add(( t_s, SCHEMA.location, rdf_str(t['stockroom']) ))
         g.add(( t_s, SCHEMA.quantity, rdf_int(t['quantity']) ))
         if 'notes' in t:
             g.add(( t_s, SCHEMA.notes, rdf_int(t['notes']) ))
