@@ -10,6 +10,9 @@
 set -Eeu
 
 script_dir=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
+tools_dir=$(cd "$script_dir/.."; pwd)
+project_dir=$(cd "$tools_dir/.."; pwd)
+data_dir="$project_dir/_data"
 
 action="${1:-build}"
 
@@ -21,7 +24,6 @@ fi
 
 "$script_dir/pre-process"
 
-# CD to project root
-cd "$script_dir/.."
+cd "$project_dir"
 
 bundle exec jekyll "$action"

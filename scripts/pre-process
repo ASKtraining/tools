@@ -11,9 +11,11 @@
 set -Eeu
 
 script_dir=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
+tools_dir=$(cd "$script_dir/.."; pwd)
+project_dir=$(cd "$tools_dir/.."; pwd)
+data_dir="$project_dir/_data"
 
-# CD to project root
-cd "$script_dir/.."
+cd "$project_dir"
 
 # This creates a copy of all markdown files
 # which is pre-processed with jekylls Liquid engine,
@@ -32,7 +34,7 @@ do
 	fi
 done
 
-mkdir -p _data
+mkdir -p "$data_dir"
 
 # Generate the RDF from the YAML
 for part in training module resource
@@ -40,14 +42,14 @@ do
 	if [ -f "./$part.yml" ]
 	then
 		# Copy meta-data file to jekylls data folder
-		cp "$part.yml" "./_data/"
+		cp "$part.yml" "$data_dir"
 		# Generate the RDF from the YAML
 		"$script_dir/yaml2rdf.py" \
-			"_data/$part.yml" \
-			"_data/$part.ttl" \
-			"_data/Prefixes.pref"
+			"$data_dir/$part.yml" \
+			"$data_dir/$part.ttl" \
+			"$data_dir/Prefixes.pref"
 		# Copy the generated RDF/Turtle file back to the repo root,
 		# so it will be copied to the publish dir (e.g. _site)
-		cp "_data/$part.ttl" ./
+		cp "$data_dir/$part.ttl" ./
 	fi
 done
