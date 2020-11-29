@@ -2,7 +2,7 @@
 # Copyright (C) 2020, Robin Vobruba <hoijui.quaero@gmail.com>
 # Licensed under the GPL v3, see LICENSE-GPLv3.md.
 #
-# Runs jekyll *build* (or *serve*).
+# Runs pre-processing, and then jekyll *build* (or *serve*).
 
 # Exit immediately on each error and unset variable;
 # see: https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
@@ -11,8 +11,13 @@ set -Eeu
 
 script_dir=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 
-# NOTE $action should be "build" or "serve"
 action="${1:-build}"
+
+if [ "$action" != "build" ] && [ "$action" != "serve" ]
+then
+	>&2 echo "WARNING: First parameter ('action') needs to be either 'build' or 'serve', was '$action'!"
+	exit 1
+fi
 
 "$script_dir/pre-process"
 

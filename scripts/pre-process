@@ -21,12 +21,15 @@ cd "$script_dir/.."
 for md in **.md
 do
 	md_txt="${md}.txt"
-	{
-		echo "---"
-		echo "---"
-		echo "{% include_relative $md %}"
-	} > "$md_txt"
-	echo "Created file '$md_txt', including '$md'."
+	if ! [ -e "$md_txt" ]
+	then
+		{
+			echo "---"
+			echo "---"
+			echo "{% include_relative $md %}"
+		} > "$md_txt"
+		echo "Created file '$md_txt', including '$md'."
+	fi
 done
 
 mkdir -p _data
