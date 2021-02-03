@@ -53,3 +53,8 @@ do
 		cp "$data_dir/$part.ttl" ./
 	fi
 done
+
+# Generate the specific Jekyll config out of the template
+"$script_dir/git_replace_project_variables.py" \
+	"$tools_dir/_config.template.yml" \
+	"$project_dir/_config.yml"
