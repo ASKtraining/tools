@@ -58,3 +58,8 @@ done
 "$script_dir/git_replace_project_variables.py" \
 	"$tools_dir/_config.template.yml" \
 	"$project_dir/_config.yml"
+
+# Copy over some static Jekyll files
+cp \
+	"$tools_dir/Gemfile"* \
+	"$project_dir/"
