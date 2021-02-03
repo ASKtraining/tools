@@ -15,10 +15,10 @@ DATE_FORMAT="%Y-%m-%d"
 
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option()
-def kicad_replace_project_vars() -> None:
+def jekyll_replace_project_vars():
     pass
 
-def git_remote_to_https_url(url) -> str:
+def git_remote_to_https_url(url):
     public_url = re.sub(r"^git@", "https://", url)
     public_url = public_url.replace(".com:", ".com/", 1)
     public_url = re.sub(r"\.git$", "", public_url)
@@ -53,7 +53,7 @@ def git_remote_to_https_url(url) -> str:
 def cli(src, dst, additional_replacements={}, src_file_path=None, repo_path='.',
         repo_url=None, organization=None, branch=None, name=None, title=None,  part_type=None,  vers=None, base_iri=None,
         dry=False,
-        verbose=False) -> None:
+        verbose=False):
     # convert tuple to dict
     add_repls_dict = {}
     for key, value in additional_replacements:
@@ -64,7 +64,7 @@ def cli(src, dst, additional_replacements={}, src_file_path=None, repo_path='.',
 def replace_vars_in_file(src, dst, additional_replacements={}, src_file_path=None, repo_path='.',
         repo_url=None, name=None, organization=None, branch=None, part_type=None,
         title=None, vers=None, base_iri=None, dry=False,
-        verbose=False) -> None:
+        verbose=False):
     repo = Repo(repo_path)
     build_root = os.path.join(repo_path, "build")
     gen_src_root = os.path.join(build_root, "gen-src")
@@ -76,7 +76,7 @@ def replace_vars_in_file(src, dst, additional_replacements={}, src_file_path=Non
         try:
             repo_url = next(remote_urls)
         except StopIteration as err:
-            raise ValueError('No remote urls defined in repo "%s"' % repo_path) from err
+            raise ValueError('No remote urls defined in repo "%s"' % repo_path) # from err
         if not repo_url.startswith('https://'):
             repo_url = git_remote_to_https_url(repo_url)
     if name is None:
@@ -96,7 +96,8 @@ def replace_vars_in_file(src, dst, additional_replacements={}, src_file_path=Non
         src_file_path = src.name
     if src_file_path == '-':
         print('WARNING: "src_file_path" has the generic value "%s"'
-                % src_file_path, file=sys.stderr)
+                #% src_file_path, file=sys.stderr)
+                % src_file_path)
     if part_type is None:
         print('ERROR: part_type has to be "resource" or "module"')
         sys.exit(1)
