@@ -4,3 +4,4 @@ packaging
 pyyaml
 rdflib
 wget
+gitpython

@@ -17,33 +17,39 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
+#
+# Used variables in this file can be found with:
+# grep -r "\\\$" _config.template.yml \
+#     | sed -e 's|[$]|\n#|g' \
+#     | grep -e '^\#{' \
+#     | sed -e 's|[^$]*[$]|\n#|g' -e 's|}.*||' -e 's|^#{||' \
+#     | sort -u
 
-title: (ASKotec) Training - Module Template
-email: your-email@example.com
+title: ASK-Training ${type} - ${title}
+email: ${email}
 description: >- # this means to ignore newlines until "baseurl:"
-  ASKotec test site. You can edit this
+  ASK-Training  ${type} test site. You can edit this
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
-baseurl: "/Training.Module.Template" # the subpath of your site, e.g. /blog
-url: "https://opencultureagency.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-repo_browse_url: "https://github.com/opencultureagency/Training.Module.Template/"
-repo_raw_url: "https://raw.githubusercontent.com/opencultureagency/Training.Module.Template/"
-git_ref: "master"
-#twitter_username: jekyllrb
-#github_username:  jekyll
+baseurl: "/${gh_repo_name}" # the subpath of your site, e.g. /blog
+url: "https://${gh_org_name}.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+repo_browse_url: "https://github.com/${gh_org_name}/${gh_repo_name}/"
+repo_raw_url: "https://raw.githubusercontent.com/${gh_org_name}/${gh_repo_name}/"
+git_ref: "${branch}"
 
 # Build settings
 theme: minima
 plugins:
     - jekyll-rdf
-#  - jekyll-feed
 
 jekyll_rdf:
-  baseiri: "http://myontology.com/"
-  path: "_data/module.ttl"
+  baseiri: "${base_iri}/"
+  path: "_data/${type}.ttl"
   default_template: "default.html"
   class_template_mappings:
-    "http://myontology.com/Module": "module.html"
+    "${base_iri}/Training": "training.html"
+    "${base_iri}/Module": "module.html"
+    "${base_iri}/Resource": "resource.html"
 
 # Exclude from processing.
 # The following items will not be processed, by default.
