@@ -85,6 +85,9 @@ def replace_vars_in_file(src, dst, additional_replacements={}, src_file_path=Non
     if part_type is None:
         part_type = 'resource' if os.path.exists(os.path.join(repo_path, 'resource.yml')) else 'module'
     email = "TODO@TODO.com"
+    if base_iri is None:
+        print('ERROR: base-IRI is not set!')
+        sys.exit(1)
     if title is None:
         title = name
     if vers is None:
