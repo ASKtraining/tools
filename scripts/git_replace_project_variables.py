@@ -46,7 +46,7 @@ def git_remote_to_https_url(url):
         default=None, help='Project name, human readable')
 @click.option('--vers', type=click.STRING, envvar='PROJECT_VERSION',
         default=None, help='Project version (prefferably without spaces)')
-@click.option('--base-iri', type=click.STRING,
+@click.option('--base-iri', type=click.STRING, envvar='BASE_IRI',
         default=None, help='The RDF base IRI used in the resource.ttl or module.ttl')
 @click.option('--dry', is_flag=True, help='Whether to skip the actual replacing')
 @click.option('--verbose', is_flag=True, help='Whether to output additional info to stderr')
