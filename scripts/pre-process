@@ -60,6 +60,7 @@ done
 	"$project_dir/_config.yml"
 
 # Copy over some static Jekyll files
-cp \
+cp -r -f \
 	"$tools_dir/Gemfile"* \
+	"$tools_dir/_layouts" \
 	"$project_dir/"
