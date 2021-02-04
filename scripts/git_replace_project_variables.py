@@ -51,9 +51,8 @@ def git_remote_to_https_url(url):
 @click.option('--dry', is_flag=True, help='Whether to skip the actual replacing')
 @click.option('--verbose', is_flag=True, help='Whether to output additional info to stderr')
 def cli(src, dst, additional_replacements={}, src_file_path=None, repo_path='.',
-        repo_url=None, organization=None, branch=None, name=None, title=None,  part_type=None,  vers=None, base_iri=None,
-        dry=False,
-        verbose=False):
+        repo_url=None, organization=None, branch=None, name=None, title=None,
+        part_type=None,  vers=None, base_iri=None, dry=False, verbose=False):
     # convert tuple to dict
     add_repls_dict = {}
     for key, value in additional_replacements:
@@ -66,8 +65,6 @@ def replace_vars_in_file(src, dst, additional_replacements={}, src_file_path=Non
         title=None, vers=None, base_iri=None, dry=False,
         verbose=False):
     repo = Repo(repo_path)
-    build_root = os.path.join(repo_path, "build")
-    gen_src_root = os.path.join(build_root, "gen-src")
     vcs_branch = repo.head.reference
     vcs_remote_tracking_branch = vcs_branch.tracking_branch()
     vcs_remote = vcs_remote_tracking_branch.remote_name
@@ -87,7 +84,7 @@ def replace_vars_in_file(src, dst, additional_replacements={}, src_file_path=Non
         branch = repo.active_branch
     if part_type is None:
         part_type = 'resource' if os.path.exists(os.path.join(repo_path, 'resource.yml')) else 'module'
-    email = "TODO" # TODO
+    email = "TODO@TODO.com"
     if title is None:
         title = name
     if vers is None:
