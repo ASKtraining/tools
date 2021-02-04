@@ -12,7 +12,7 @@ rdf_prefix_path: _data/Prefixes.pref
   <h3>authors</h3>
   {% for author in authors %}
   <p>
-      <h5>{{author | rdf_property: "rdfs:label"}}</h5>
+      <h5>{{author | rdf_property: "schema:name"}}</h5>
       <i>name:</i> {{author | rdf_property: "schema:name"}}<br/>
       <i>E-Mail:</i> {{author | rdf_property: "schema:email"}}<br/>
   </p>
