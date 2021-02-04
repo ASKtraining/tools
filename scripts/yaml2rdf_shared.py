@@ -79,7 +79,7 @@ def add(graph, subj, pred, yaml_cont, prop, type_conv, required=True):
 
 def conv_license(yaml_cont, g):
 
-    subj  = ASK[str2id(yaml_cont['name'])]
+    subj = ASK[str2id(yaml_cont['name'])]
     # TODO Replace this with an external type, probably [http://spdx.org/rdf/terms#License](https://spdx.org/rdf/terms/#d4e2374)
     g.add(( subj, RDF.type, ASK.License ))
     g.add(( subj, RDFS.label, rdf_str(yaml_cont['name']) ))
@@ -95,12 +95,13 @@ def conv_licenses(yaml_cont, g, parent_subj):
 
 def conv_author(yaml_cont, graph):
 
-    subj  = ASKA[str2id(yaml_cont['name'])]
-    graph.add(( subj, RDF.type, ASK.Author ))
+    subj = ASKA[str2id(yaml_cont['name'])]
+    graph.add(( subj, RDF.type, SCHEMA.Person ))
     #graph.add(( subj, RDFS.label, rdf_str(yaml_cont['name']) ))
     graph.add(( subj, SCHEMA.name, rdf_str(yaml_cont['name']) ))
     graph.add(( subj, SCHEMA.email, rdf_str(yaml_cont['email']) ))
-    graph.add(( subj, SCHEMA.github, rdf_url(yaml_cont['github-user']) ))
+    if 'github-user' in yaml_cont:
+        graph.add(( subj, SCHEMA.github, rdf_url(yaml_cont['github-user']) ))
     if 'telegram' in yaml_cont:
         graph.add(( subj, SCHEMA.telegram, rdf_str(yaml_cont['telegram']) ))
     #add(graph, subj, SCHEMA.telegram, yaml_cont, 'telegram', rdf_str, False)
@@ -110,6 +111,6 @@ def conv_authors(yaml_cont, graph, parent_subj):
 
     if 'authors' in yaml_cont:
         for yaml_cont_part in yaml_cont['authors']:
-            graph.add(( parent_subj, ASK.author,
+            graph.add(( parent_subj, SCHEMA.author,
                 conv_author(yaml_cont_part, graph) ))
 
