@@ -32,7 +32,8 @@ def convert_resource_yaml_to_rdf(yaml_cont, g):
         g.add(( m_s, ASK.manual, rdf_path('manual.md') ))
     else:
         conv_fail('Entry not found "%s", and default path "%s" does not exist'
-                % (pre_path + '.' + 'manual', os.path.curdir + '/manual.md'))
+                % (pre_path + '.' + 'manual',
+                    os.path.join(os.path.curdir, 'manual.md')))
     g.add(( m_s, ASK.release, rdf_str(y['release']) ))
     g.add(( m_s, SCHEMA.duration, rdf_duration(y['duration']) ))
     g.add(( m_s, ASK.difficulty, rdf_str(y['difficulty']) ))
