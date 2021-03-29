@@ -161,6 +161,14 @@ def ensure_turtles(yaml_cont, g, type_str):
                     % (type_str, KEY_URL_YAML, KEY_URL_RDF))
         elem_i = elem_i + 1
 
+def ensure_module_turtles(yaml_cont, g):
+    '''
+    Either downloads the module RDF files directly,
+    or downloads their YAML version,
+    and converts them to RDF afterwards.
+    '''
+    ensure_turtles(yaml_cont, g, 'module')
+
 def ensure_resource_turtles(yaml_cont, g):
     '''
     Either downloads the resource RDF files directly,
