@@ -9,6 +9,8 @@ from packaging import version
 import yaml
 import rdflib
 from rdflib.namespace import DC, DCTERMS, DOAP, FOAF, SKOS, OWL, RDF, RDFS, VOID, XMLNS, XSD
+import wget
+from yaml2rdf import convert_file
 
 SCHEMA = rdflib.Namespace('http://schema.org/')
 SPDX = rdflib.Namespace('http://spdx.org/rdf/terms#')
@@ -18,6 +20,10 @@ ASKM = rdflib.Namespace('http://myontology.com/modules/')
 ASKR = rdflib.Namespace('http://myontology.com/resources/')
 ASKC = rdflib.Namespace('http://myontology.com/materials/')
 ASKT = rdflib.Namespace('http://myontology.com/tools/')
+
+KEY_URL_YAML = 'yaml-url'
+KEY_URL_RDF = 'rdf-url'
+KEY_FILE_RDF = 'rdf-file'
 
 def version_compare(ver1, ver2):
     '''
@@ -114,3 +120,50 @@ def conv_authors(yaml_cont, graph, parent_subj):
             graph.add(( parent_subj, SCHEMA.author,
                 conv_author(yaml_cont_part, graph) ))
 
+def download(url, path):
+    '''
+    Downloads a URL pointing to a file into a local file,
+    pointed to by path.
+    '''
+    print('downloading %s to %s ...' % (url, path))
+    if os.path.exists(path):
+        os.remove(path)
+    wget.download(url, path, None)
+
+def ensure_turtles(yaml_cont, g, type_str):
+    '''
+    Either downloads the module/resource RDF files directly,
+    or downloads their YAML version,
+    and converts them to RDF afterwards.
+    '''
+
+    elem_i = 0
+    for elem in yaml_cont[type_str + 's']:
+        if KEY_URL_YAML in elem:
+            yml_url = elem[KEY_URL_YAML]
+            yml_file = os.path.join(os.path.curdir,
+                    '%s_%d.yml' % (type_str, elem_i))
+            ttl_file = os.path.join(os.path.curdir,
+                    '%s_%d.ttl' % (type_str, elem_i))
+            pre_file = os.path.join(os.path.curdir,
+                    '%s_%d.pref' % (type_str, elem_i))
+            #download(yml_url, yml_file)
+            convert_file(yml_file, ttl_file, pre_file)
+            yaml_cont[KEY_FILE_RDF] = ttl_file
+        elif KEY_URL_RDF in elem:
+            ttl_url = elem[KEY_URL_RDF]
+            ttl_file = os.path.join(os.path.curdir,
+                    '%s_%d.ttl' % (type_str, elem_i))
+            download(ttl_url, ttl_file)
+            yaml_cont[KEY_FILE_RDF] = ttl_file
+        else:
+            conv_fail('%s needs either of %s or %s specified'
+                    % (type_str, KEY_URL_YAML, KEY_URL_RDF))
+        elem_i = elem_i + 1
+
+def ensure_resource_turtles(yaml_cont, g):
+    '''
+    Either downloads the resource RDF files directly,
+    or downloads their YAML version,
+    and converts them to RDF afterwards.
+    '''
