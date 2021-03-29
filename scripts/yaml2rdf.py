@@ -43,10 +43,11 @@ def create_graph():
     g.bind("xsd",  XSD)
     g.bind("ask",  ASK)
     g.bind("aska", ASKA)
+    g.bind("askt", ASKT)
     g.bind("askm", ASKM)
     g.bind("askr", ASKR)
     g.bind("askc", ASKC)
-    g.bind("askt", ASKT)
+    g.bind("asko", ASKO)
 
     return g
 

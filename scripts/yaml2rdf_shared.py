@@ -10,16 +10,19 @@ import yaml
 import rdflib
 from rdflib.namespace import DC, DCTERMS, DOAP, FOAF, SKOS, OWL, RDF, RDFS, VOID, XMLNS, XSD
 import wget
-from yaml2rdf import convert_file
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from yaml2rdf import convert_file
 
 SCHEMA = rdflib.Namespace('http://schema.org/')
 SPDX = rdflib.Namespace('http://spdx.org/rdf/terms#')
 ASK  = rdflib.Namespace('http://myontology.com/')
 ASKA = rdflib.Namespace('http://myontology.com/authors/')
+ASKT = rdflib.Namespace('http://myontology.com/trainings/')
 ASKM = rdflib.Namespace('http://myontology.com/modules/')
 ASKR = rdflib.Namespace('http://myontology.com/resources/')
 ASKC = rdflib.Namespace('http://myontology.com/materials/')
-ASKT = rdflib.Namespace('http://myontology.com/tools/')
+ASKO = rdflib.Namespace('http://myontology.com/tools/')
 
 KEY_URL_YAML = 'yaml-url'
 KEY_URL_RDF = 'rdf-url'

@@ -3,6 +3,8 @@ layout: default
 rdf_prefix_path: _data/Prefixes.pref
 ---
 
+{% assign resource = page.rdf %}
+
     <main id="content" class="main-content" role="main">
       <div id="meta-info" class="row">
         <div class="col-md-6">
@@ -31,11 +33,11 @@ rdf_prefix_path: _data/Prefixes.pref
         <div class="col-md-6">
           <table class="table table-striped table-hover" width="100%">
               <td width="50%"><i class="fas fa-address-card"></i> Difficulty</td>
-              <td width="50%">{{page.rdf | rdf_property: "ask:difficulty"}}</td>
+              <td width="50%">{{resource | rdf_property: "ask:difficulty"}}</td>
             </tr>
             <tr>
               <td width="50%"><i class="far fa-clock"></i> Duration</td>
-              <td>{{page.rdf | rdf_property: "ask:duration"}}</td>
+              <td>{{resource | rdf_property: "ask:duration"}}</td>
             </tr>
             <tr>
               <td><i class="fa fa-tag"></i> Categories</td>
@@ -43,11 +45,11 @@ rdf_prefix_path: _data/Prefixes.pref
             </tr>
             <tr>
               <td><i class="fas fa-money-bill-wave"></i> Costs</td>
-              <td>{{page.rdf | rdf_property: "ask:cost"}}</td>
+              <td>{{resource | rdf_property: "ask:cost"}}</td>
             </tr>
             <tr>
               <td><i class="fas fa-language"></i> Languages</td>
-              <td>{{page.rdf | rdf_property: "ask:language"}} <i class="fas fa-check-circle"></i></td>
+              <td>{{resource | rdf_property: "ask:language"}} <i class="fas fa-check-circle"></i></td>
             </tr>
           </table>
         </div>
@@ -101,15 +103,17 @@ rdf_prefix_path: _data/Prefixes.pref
               </div>
             </div>
             <div class="col-md-6">
+              {% assign materials = resource | rdf_property: "askr:material", nil, true %}
               <h4>Material</h4>
               <ul>
-                {% for material in Material %}
+                {% for material in material %}
                   <li>{{material | rdf_property: "schema:quantity"}}x <a href="{{material | rdf_property: 'schema:stockroom'}}">{{material | rdf_property: "rdfs:label"}}</a></li>
                 {% endfor %}
               </ul>
+              {% assign tools = resource | rdf_property: "asko:tool", nil, true %}
               <h4>Tools</h4>
               <ul>
-                {% for tool in Tool %}
+                {% for tool in tools %}
                   <li>{{tool | rdf_property: "schema:quantity"}}x <a href="{{tool | rdf_property: 'schema:stockroom'}}">{{tool | rdf_property: "rdfs:label"}}</a></li>
                 {% endfor %}
               </ul>

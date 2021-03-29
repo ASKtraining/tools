@@ -3,19 +3,89 @@ layout: default
 rdf_prefix_path: _data/Prefixes.pref
 ---
 
+{% assign module = page.rdf %}
+
 <div class="module">
   <i>name:</i> {{page.rdf | rdf_property: "rdfs:label"}}<br/>
   <i>manual:</i> {{page.rdf | rdf_property: "ask:manual"}}<br/>
 
-  {% assign authors = page.rdf | rdf_property: "schema:author", nil, true %}
+  {% assign authors = module | rdf_property: "schema:author", nil, true %}
   <div class="authors">
   <h3>authors</h3>
   {% for author in authors %}
   <p>
+    <h5>{{author | rdf_property: "schema:name"}}</h5>
+    <i>name:</i> {{author | rdf_property: "schema:name"}}<br/>
+    <i>E-Mail:</i> {{author | rdf_property: "schema:email"}}<br/>
+  </p>
+  {% endfor %}
+  </div>
+
+  {% assign licenses = module | rdf_property: "ask:license", nil, true %}
+  <div class="licenses">
+  <h3>licenses</h3>
+  {% for license in licenses %}
+  <p>
+    <h5>{{license | rdf_property: "rdfs:label"}}</h5>
+    <i>file:</i> {{license | rdf_property: "schema:file"}}<br/>
+    <i>SPDX-Identifier:</i> {{license | rdf_property: "spdx:licenseDeclared"}}<br/>
+  </p>
+  {% endfor %}
+  </div>
+
+  {% assign resources = module | rdf_property: "ask:resource", nil, true %}
+  <div class="resources">
+  <h3>resources</h3>
+  {% for resource in resources %}
+  <p>
+    <h5>{{resource | rdf_property: "rdfs:label"}}</h5>
+    <i>name:</i> {{resource | rdf_property: "rdfs:label"}}<br/>
+    <i>manual:</i> {{resource | rdf_property: "ask:manual"}}<br/>
+
+    {% assign materials = resource | rdf_property: "askr:material", nil, true %}
+    <div class="materials">
+    <h3>materials</h3>
+    {% for material in materials %}
+    <p>
+      <h5>{{material | rdf_property: "rdfs:label"}}</h5>
+      <i>Quantity:</i> {{material | rdf_property: "schema:quantity"}}<br/>
+    </p>
+    {% endfor %}
+    </div>
+
+    {% assign licenses = resource | rdf_property: "ask:license", nil, true %}
+    <div class="licenses">
+    <h3>licenses</h3>
+    {% for license in licenses %}
+    <p>
+      <h5>{{license | rdf_property: "rdfs:label"}}</h5>
+      <i>file:</i> {{license | rdf_property: "schema:file"}}<br/>
+      <i>SPDX-Identifier:</i> {{license | rdf_property: "spdx:licenseDeclared"}}<br/>
+    </p>
+    {% endfor %}
+    </div>
+
+    {% assign authors = resource | rdf_property: "schema:author", nil, true %}
+    <div class="authors">
+    <h3>authors</h3>
+    {% for author in authors %}
+    <p>
       <h5>{{author | rdf_property: "schema:name"}}</h5>
       <i>name:</i> {{author | rdf_property: "schema:name"}}<br/>
       <i>E-Mail:</i> {{author | rdf_property: "schema:email"}}<br/>
+    </p>
+    {% endfor %}
+    </div>
   </p>
   {% endfor %}
   </div>
 </div>
+
+<!-- <pre id="jekyll-debug"></pre> -->
+
+<script>
+var obj = JSON.parse(decodeURIComponent("{{ site | jsonify | uri_escape }}"));
+var pretty_json = JSON.stringify(obj, null, 4);  // Pretty-printed JSON (indented 4 spaces).
+document.getElementById("jekyll-debug").textContent = pretty_json;
+</script>
+

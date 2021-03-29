@@ -83,7 +83,14 @@ def replace_vars_in_file(src, dst, additional_replacements={}, src_file_path=Non
     if branch is None:
         branch = repo.active_branch
     if part_type is None:
-        part_type = 'resource' if os.path.exists(os.path.join(repo_path, 'resource.yml')) else 'module'
+        if os.path.exists(os.path.join(repo_path, 'resource.yml')):
+            part_type = 'resource'
+        elif os.path.exists(os.path.join(repo_path, 'module.yml')):
+            part_type = 'module'
+        elif os.path.exists(os.path.join(repo_path, 'training.yml')):
+            part_type = 'training'
+        else:
+            print('ERROR: Unable to figure out part_type')
     email = "TODO@TODO.com"
     if base_iri is None:
         print('ERROR: base-IRI is not set!\nSet with --base-iri or BASE_IRI=')
@@ -99,7 +106,7 @@ def replace_vars_in_file(src, dst, additional_replacements={}, src_file_path=Non
                 #% src_file_path, file=sys.stderr)
                 % src_file_path)
     if part_type is None:
-        print('ERROR: part_type has to be "resource" or "module"')
+        print('ERROR: part_type has to be "resource", "module" or "training"')
         sys.exit(1)
     pre_filter=None
     post_filter=None

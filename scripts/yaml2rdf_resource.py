@@ -8,6 +8,7 @@ import os
 import yaml
 import rdflib
 from rdflib.namespace import DC, DCTERMS, DOAP, FOAF, SKOS, OWL, RDF, RDFS, VOID, XMLNS, XSD
+from yaml2rdf_shared import version_compare
 from yaml2rdf_shared import *
 
 def convert_resource_yaml_to_rdf(yaml_cont, g):
@@ -62,7 +63,7 @@ def convert_resource_yaml_to_rdf(yaml_cont, g):
         g.add(( m_s, ASKR.material, t_s ))
 
     for t in y['tools']:
-        t_s  = ASKT[str2id(t['name'])]
+        t_s  = ASKO[str2id(t['name'])]
         g.add(( t_s, RDF.type, ASK.Tool ))
         g.add(( t_s, RDFS.label, rdf_str(t['name']) ))
         g.add(( t_s, SCHEMA.stockroom, rdf_str(t['stockroom']) ))

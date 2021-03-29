@@ -23,7 +23,7 @@ def convert_training_yaml_to_rdf(yaml_cont, g):
     y = yaml_cont['training']
     pre_path = 'training'
 
-    m_s = ASKM[str2id(y['name'])]
+    m_s = ASKT[str2id(y['name'])]
 
     ensure_module_turtles(y, g)
     for mod_ttl in glob.glob('module_*.ttl'):
@@ -32,3 +32,4 @@ def convert_training_yaml_to_rdf(yaml_cont, g):
         g.add(( m_s, ASK.module, mod_s ))
 
     g.add(( m_s, RDF.type, ASK.Training ))
+    g.add(( m_s, RDFS.label, rdf_str(y['name']) ))
