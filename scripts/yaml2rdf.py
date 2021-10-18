@@ -79,7 +79,7 @@ def convert_yaml_to_rdf(yaml_cont, conv_func, pref_file=None):
 
     conv_func(yaml_cont, g)
 
-    return g.serialize(format="turtle").decode("utf-8")
+    return g.serialize(format="turtle")
 
 
 def convert_file(yaml_file=None, rdf_file=None, pref_file='./Prefixes.pref'):
