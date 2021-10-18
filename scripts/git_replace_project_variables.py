@@ -76,10 +76,11 @@ def replace_vars_in_file(src, dst, additional_replacements={}, src_file_path=Non
             raise ValueError('No remote urls defined in repo "%s"' % repo_path) # from err
         if not repo_url.startswith('https://'):
             repo_url = git_remote_to_https_url(repo_url)
+    slug = re.sub(r'.*[/:]([^/]+/[^/]+)/?$', '\g<1>', repo_url)
     if name is None:
-        name = os.path.basename(os.path.abspath(repo_path))
+        name = re.sub(r'.*/', '', slug)
     if organization is None:
-        organization = os.path.basename(os.path.dirname(os.path.abspath(repo_path)))
+        organization = re.sub(r'/.*', '', slug)
     if branch is None:
         branch = repo.active_branch
     if part_type is None:
